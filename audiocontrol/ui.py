@@ -6,11 +6,17 @@ from .audio import AudioManager
 
 class AudioControlApp(Gtk.Application):
     def __init__(self):
-        super().__init__(application_id='com.example.audiocontrol')
+        super().__init__(application_id='ca.hongyan.audiocontrol')
 
     def do_activate(self):
         self.window = Gtk.ApplicationWindow(application=self)
+        
+        # Initialize layer shell first
         self.setup_layer_shell(self.window)
+        
+        # Disable resizability after layer shell init
+        self.window.set_resizable(False)
+        
         self.setup_ui(self.window)
         self.window.present()
 
@@ -19,12 +25,16 @@ class AudioControlApp(Gtk.Application):
         Gtk4LayerShell.set_layer(window, Gtk4LayerShell.Layer.TOP)
         Gtk4LayerShell.set_keyboard_mode(window, Gtk4LayerShell.KeyboardMode.ON_DEMAND)
         
+        # Set exclusive zone to 0 (don't reserve screen space)
+        Gtk4LayerShell.set_exclusive_zone(window, 0)
+        Gtk4LayerShell.auto_exclusive_zone_enable(window)
+
         # Anchor to top right
         Gtk4LayerShell.set_anchor(window, Gtk4LayerShell.Edge.TOP, True)
         Gtk4LayerShell.set_anchor(window, Gtk4LayerShell.Edge.RIGHT, True)
         
         # Margins
-        Gtk4LayerShell.set_margin(window, Gtk4LayerShell.Edge.TOP, 10)
+        Gtk4LayerShell.set_margin(window, Gtk4LayerShell.Edge.TOP, 100)
         Gtk4LayerShell.set_margin(window, Gtk4LayerShell.Edge.RIGHT, 10)
 
     def setup_ui(self, window=None):
@@ -46,6 +56,10 @@ class AudioControlApp(Gtk.Application):
 
         main_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=0)
         main_box.add_css_class('main-window')
+        
+        # Set fixed size for the main content
+        main_box.set_size_request(400, -1)  # Width: 400px, Height: auto
+        
         window.set_child(main_box)
 
         # --- Sound Section ---

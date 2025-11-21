@@ -25,6 +25,7 @@ window {
 .section-title {
     font-weight: bold;
     font-size: 14px;
+    margin-top: 8px;
     margin-bottom: 2px;
     color: rgba(0, 0, 0, 0.8);
 }
@@ -32,6 +33,10 @@ window {
 /* Volume Slider */
 .volume-box {
     margin-top: 0px;
+}
+
+.volume-slider {
+    margin-top: -6px;
 }
 
 scale {
@@ -111,6 +116,9 @@ scale slider {
 }
 
 .footer-label {
-    font-size: 16px;
+    font-weight: bold;
+    font-size: 14px;
+    margin-top: 8px;
+    margin-bottom: 14px;
     color: rgba(0, 0, 0, 0.8);
 }
