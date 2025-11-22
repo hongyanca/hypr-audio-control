@@ -107,9 +107,24 @@ class AudioControlApp(Gtk.Application):
         sound_box.add_css_class('section-box')
         main_box.append(sound_box)
 
+        # Header with Sound title and Close button on the same line
+        header_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=0)
+        header_box.add_css_class('header-box')
+        
         sound_label = Gtk.Label(label="Sound", xalign=0)
         sound_label.add_css_class('section-title')
-        sound_box.append(sound_label)
+        sound_label.set_hexpand(True)
+        header_box.append(sound_label)
+        
+        # Close button
+        close_button = Gtk.Button()
+        close_button.set_label("✕")
+        close_button.add_css_class('close-button')
+        close_button.connect('clicked', lambda btn: self.quit())
+        header_box.append(close_button)
+        
+        sound_box.append(header_box)
+
 
         # Volume Slider Container
         volume_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=10)
