@@ -81,6 +81,8 @@ The widget will appear in the top-right corner of your screen.
 - **q** or **Ctrl+q**: Exit the application
 - **1-9**: Set volume to 10%-90% (1=10%, 2=20%, ..., 9=90%)
 - **0**: Set volume to 100%
+- **-**: Decrease volume by 5%
+- **=**: Increase volume by 5%
 
 ## Project Structure
 
