@@ -89,3 +89,19 @@ This project is licensed under the MIT License. See LICENSE file for details.
 ## Contributing
 
 Contributions are welcome. Please open an issue or submit a pull request.
+
+## Troubleshooting
+
+### GTK4 Layer Shell Initialization Error
+
+If you encounter an error like:
+```
+Failed to initialize layer surface, GTK4 Layer Shell may have been linked after libwayland.
+```
+
+Please use the provided `run.sh` script to start the application:
+```bash
+./run.sh
+```
+
+This script preloads the `libgtk4-layer-shell.so` library to resolve the linking order issue.
