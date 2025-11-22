@@ -39,6 +39,23 @@ sudo pacman -S python-gobject gtk4 gtk4-layer-shell wireplumber
 # Other distributions: install equivalent packages
 ```
 
+### Arch Linux Package
+
+To build and install as a system package on Arch Linux:
+
+```bash
+makepkg -si
+```
+
+This will install the application to `/usr/share/hypr-audio-control` and provide the `hypr-audio-control` command.
+
+Or build and install manually:
+
+```bash
+makepkg -s
+sudo pacman -U ./hypr-audio-control-*.pkg.tar.zst
+```
+
 ## Usage
 
 Run the application:
