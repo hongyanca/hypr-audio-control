@@ -27,18 +27,14 @@ class AudioControlApp(Gtk.Application):
         Gtk4LayerShell.init_for_window(window)
         Gtk4LayerShell.set_layer(window, Gtk4LayerShell.Layer.TOP)
         Gtk4LayerShell.set_keyboard_mode(window, Gtk4LayerShell.KeyboardMode.ON_DEMAND)
-        
-        # Set exclusive zone to 0 (don't reserve screen space)
-        Gtk4LayerShell.set_exclusive_zone(window, 0)
-        Gtk4LayerShell.auto_exclusive_zone_enable(window)
 
         # Anchor to top right
         Gtk4LayerShell.set_anchor(window, Gtk4LayerShell.Edge.TOP, True)
         Gtk4LayerShell.set_anchor(window, Gtk4LayerShell.Edge.RIGHT, True)
         
         # Margins
-        Gtk4LayerShell.set_margin(window, Gtk4LayerShell.Edge.TOP, 100)
-        Gtk4LayerShell.set_margin(window, Gtk4LayerShell.Edge.RIGHT, 10)
+        # Gtk4LayerShell.set_margin(window, Gtk4LayerShell.Edge.TOP, 100)
+        # Gtk4LayerShell.set_margin(window, Gtk4LayerShell.Edge.RIGHT, 10)
 
     def setup_keyboard_controller(self, window):
         """Setup keyboard event controller for shortcuts"""
