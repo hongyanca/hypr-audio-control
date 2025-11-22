@@ -144,6 +144,45 @@ scale slider {
     font-weight: bold;
     font-size: 14px;
     margin-top: 8px;
-    margin-bottom: 14px;
+    margin-bottom: 4px;
     color: rgba(0, 0, 0, 0.8);
+}
+
+/* Launcher Labels */
+/* Launcher Labels */
+.launcher-row {
+    padding: 6px 0px;
+    border-radius: 6px;
+    transition: background-color 0.2s;
+}
+
+.launcher-row:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.launcher-icon {
+    color: rgba(0, 0, 0, 0.7);
+    padding: 0px;
+}
+
+.launcher-label {
+    font-size: 16px;
+    color: rgba(0, 0, 0, 0.7);
+    transition: color 0.2s;
+}
+
+.launcher-row:hover .launcher-label {
+    color: #007AFF;
+}
+
+.launcher-row-disabled {
+    opacity: 0.5;
+}
+
+.launcher-row-disabled:hover {
+    background-color: transparent;
+}
+
+.launcher-row-disabled:hover .launcher-label {
+    color: rgba(0, 0, 0, 0.7);
 }

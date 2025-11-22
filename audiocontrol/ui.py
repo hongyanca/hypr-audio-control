@@ -3,6 +3,8 @@ gi.require_version('Gtk', '4.0')
 gi.require_version('Gtk4LayerShell', '1.0')
 from gi.repository import Gtk, Gdk, Gtk4LayerShell
 from .audio import AudioManager
+import shutil
+import subprocess
 
 class AudioControlApp(Gtk.Application):
     def __init__(self):
@@ -176,14 +178,62 @@ class AudioControlApp(Gtk.Application):
         main_box.append(sep2)
 
         # --- Footer ---
-        footer_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=10)
+        footer_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
         footer_box.add_css_class('footer-box')
         
-        pref_label = Gtk.Label(label="Sound Preferences...", xalign=0)
+        pref_label = Gtk.Label(label="Advanced Controls", xalign=0)
         pref_label.add_css_class('footer-label')
         footer_box.append(pref_label)
+
+        # Wiremix Launcher
+        wiremix_path = shutil.which('wiremix')
+        omarchy_launcher = shutil.which('omarchy-launch-or-focus-tui')
+        
+        def launch_wiremix(gesture, n_press, x, y):
+            cmd = []
+            if omarchy_launcher:
+                cmd = [omarchy_launcher, 'wiremix']
+            else:
+                cmd = ['wiremix']
+            subprocess.Popen(cmd)
+
+        self.add_launcher_label(footer_box, "wiremix", wiremix_path is not None, launch_wiremix)
+
+        # Pavucontrol Launcher
+        pavu_path = shutil.which('pavucontrol')
+        
+        def launch_pavu(gesture, n_press, x, y):
+            subprocess.Popen(['pavucontrol'])
+
+        self.add_launcher_label(footer_box, "PulseAudio Volume Control", pavu_path is not None, launch_pavu)
         
         main_box.append(footer_box)
+
+    def add_launcher_label(self, parent_box, text, enabled, callback):
+        box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=12)
+        box.add_css_class('launcher-row')
+        
+        # Icon
+        icon = Gtk.Image.new_from_icon_name("preferences-system")
+        icon.set_pixel_size(30)
+        icon.add_css_class('launcher-icon')
+        box.append(icon)
+
+        # Label
+        label = Gtk.Label(label=text, xalign=0)
+        label.add_css_class('launcher-label')
+        box.append(label)
+        
+        if enabled:
+            gesture = Gtk.GestureClick.new()
+            gesture.connect('pressed', callback)
+            box.add_controller(gesture)
+            box.set_cursor(Gdk.Cursor.new_from_name("pointer", None))
+        else:
+            box.add_css_class('launcher-row-disabled')
+            box.set_cursor(Gdk.Cursor.new_from_name("default", None))
+            
+        parent_box.append(box)
 
     def create_device_row(self, name, icon_name, active, device_id):
         box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=12)
