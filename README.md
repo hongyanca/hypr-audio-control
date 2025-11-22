@@ -55,9 +55,15 @@ The widget will appear in the top-right corner of your screen.
 
 ### Controls
 
+#### Mouse Controls
 - **Volume Slider**: Drag to adjust the volume of the active audio device
 - **Device List**: Click on any device name to set it as the default output device
 - **Sound Preferences**: Opens system sound preferences (placeholder)
+
+#### Keyboard Shortcuts
+- **q** or **Ctrl+q**: Exit the application
+- **1-9**: Set volume to 10%-90% (1=10%, 2=20%, ..., 9=90%)
+- **0**: Set volume to 100%
 
 ## Project Structure
 

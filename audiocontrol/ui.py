@@ -17,6 +17,9 @@ class AudioControlApp(Gtk.Application):
         # Disable resizability after layer shell init
         self.window.set_resizable(False)
         
+        # Setup keyboard event controller
+        self.setup_keyboard_controller(self.window)
+        
         self.setup_ui(self.window)
         self.window.present()
 
@@ -36,6 +39,43 @@ class AudioControlApp(Gtk.Application):
         # Margins
         Gtk4LayerShell.set_margin(window, Gtk4LayerShell.Edge.TOP, 100)
         Gtk4LayerShell.set_margin(window, Gtk4LayerShell.Edge.RIGHT, 10)
+
+    def setup_keyboard_controller(self, window):
+        """Setup keyboard event controller for shortcuts"""
+        key_controller = Gtk.EventControllerKey.new()
+        key_controller.connect('key-pressed', self.on_key_pressed)
+        window.add_controller(key_controller)
+        
+        # Store reference to active device and scale for keyboard control
+        self.active_device_id = None
+        self.volume_scale = None
+
+    def on_key_pressed(self, controller, keyval, keycode, state):
+        """Handle keyboard shortcuts"""
+        # Get key name
+        key_name = Gdk.keyval_name(keyval)
+        
+        # Check for Ctrl modifier
+        ctrl_pressed = state & Gdk.ModifierType.CONTROL_MASK
+        
+        # Exit on 'q' or 'Ctrl+q'
+        if key_name == 'q' or (key_name == 'q' and ctrl_pressed):
+            self.quit()
+            return True
+        
+        # Volume control with number keys 1-9, 0
+        # 1 = 10%, 2 = 20%, ..., 9 = 90%, 0 = 100%
+        volume_map = {
+            '1': 10, '2': 20, '3': 30, '4': 40, '5': 50,
+            '6': 60, '7': 70, '8': 80, '9': 90, '0': 100
+        }
+        
+        if key_name in volume_map and self.active_device_id and self.volume_scale:
+            volume_percent = volume_map[key_name]
+            self.volume_scale.set_value(volume_percent)
+            return True
+        
+        return False
 
     def setup_ui(self, window=None):
         if window is None:
@@ -114,6 +154,10 @@ class AudioControlApp(Gtk.Application):
         scale.set_value(current_volume * 100)
         if active_device_id:
             scale.connect('value-changed', self.on_volume_changed, active_device_id)
+        
+        # Store references for keyboard control
+        self.volume_scale = scale
+        self.active_device_id = active_device_id
 
         # Separator
         sep2 = Gtk.Separator(orientation=Gtk.Orientation.HORIZONTAL)
