@@ -1,7 +1,7 @@
 # Maintainer: User <user@localhost>
 pkgname=hypr-audio-control
 pkgver=0.1.1
-pkgrel=2
+pkgrel=3
 pkgdesc="Simple Audio Control Widget for Hyprland"
 arch=('any')
 url="https://github.com/example/hypr-audio-control"

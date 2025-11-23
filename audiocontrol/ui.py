@@ -72,6 +72,11 @@ class AudioControlApp(Gtk.Application):
             volume_percent = volume_map[key_name]
             self.volume_scale.set_value(volume_percent)
             return True
+
+        # Set volume to 0% with '`' (grave)
+        if key_name == 'grave' and self.active_device_id and self.volume_scale:
+            self.volume_scale.set_value(0)
+            return True
             
         # Decrease volume by 5% with '-'
         if key_name == 'minus' and self.active_device_id and self.volume_scale:
