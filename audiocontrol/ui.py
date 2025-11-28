@@ -247,6 +247,8 @@ class AudioControlApp(Gtk.Application):
         self.add_launcher_label(footer_box, "PulseAudio Volume Control", pavu_path is not None, launch_pavu)
         
         main_box.append(footer_box)
+        
+        self.apply_theme()
 
     def add_launcher_label(self, parent_box, text, enabled, callback):
         box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=12)
