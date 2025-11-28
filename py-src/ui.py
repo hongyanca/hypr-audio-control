@@ -2,7 +2,7 @@ import gi
 gi.require_version('Gtk', '4.0')
 gi.require_version('Gtk4LayerShell', '1.0')
 from gi.repository import Gtk, Gdk, Gio, Gtk4LayerShell
-from .audio import AudioManager
+from audio import AudioManager
 import shutil
 import subprocess
 
@@ -115,8 +115,13 @@ class AudioControlApp(Gtk.Application):
         if old_child:
             window.set_child(None)
         # Load CSS
+        import os
         css_provider = Gtk.CssProvider()
-        css_provider.load_from_path('style.css')
+        # Look for style.css in ../style/style.css relative to this file
+        # This works for both dev (py-src/ui.py -> style/style.css)
+        # and install (py-src/ui.py -> style/style.css) if installed structure matches
+        css_path = os.path.join(os.path.dirname(__file__), '..', 'style', 'style.css')
+        css_provider.load_from_path(css_path)
         Gtk.StyleContext.add_provider_for_display(
             Gdk.Display.get_default(),
             css_provider,

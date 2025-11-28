@@ -218,4 +218,4 @@ __marimo__/
 # Arch Linux Packaging
 hypr-audio-control-*.pkg.tar.zst
 pkg/
-src/
+hypr-audio-control
