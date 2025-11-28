@@ -1,7 +1,7 @@
 import gi
 gi.require_version('Gtk', '4.0')
 gi.require_version('Gtk4LayerShell', '1.0')
-from gi.repository import Gtk, Gdk, Gtk4LayerShell
+from gi.repository import Gtk, Gdk, Gio, Gtk4LayerShell
 from .audio import AudioManager
 import shutil
 import subprocess
@@ -9,6 +9,7 @@ import subprocess
 class AudioControlApp(Gtk.Application):
     def __init__(self):
         super().__init__(application_id='ca.hongyan.audiocontrol')
+        self.is_dark_theme = False # Default to Light theme
 
     def do_activate(self):
         self.window = Gtk.ApplicationWindow(application=self)
@@ -21,9 +22,20 @@ class AudioControlApp(Gtk.Application):
         
         # Setup keyboard event controller
         self.setup_keyboard_controller(self.window)
-        
+
+
         self.setup_ui(self.window)
         self.window.present()
+
+        # System Theme Detection
+        try:
+            self.settings = Gio.Settings.new("org.gnome.desktop.interface")
+            self.settings.connect("changed::color-scheme", self.on_system_theme_changed)
+            self.update_theme_from_system()
+        except Exception as e:
+            print(f"Failed to setup system theme detection: {e}")
+
+
 
     def setup_layer_shell(self, window):
         Gtk4LayerShell.init_for_window(window)
@@ -113,6 +125,7 @@ class AudioControlApp(Gtk.Application):
 
         main_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=0)
         main_box.add_css_class('main-window')
+        self.main_box = main_box
         
         # Set fixed size for the main content
         main_box.set_size_request(400, -1)  # Width: 400px, Height: auto
@@ -132,6 +145,13 @@ class AudioControlApp(Gtk.Application):
         sound_label.add_css_class('section-title')
         sound_label.set_hexpand(True)
         header_box.append(sound_label)
+        
+        # Theme button
+        self.theme_button = Gtk.Button()
+        self.theme_button.set_icon_name("weather-clear-symbolic") # Sun for Light theme
+        self.theme_button.add_css_class('theme-button')
+        self.theme_button.connect('clicked', self.toggle_theme)
+        header_box.append(self.theme_button)
         
         # Close button
         close_button = Gtk.Button()
@@ -293,3 +313,23 @@ class AudioControlApp(Gtk.Application):
         AudioManager.set_default_device(device_id)
         # Refresh the UI to reflect the change
         self.setup_ui()
+
+    def toggle_theme(self, button):
+        self.is_dark_theme = not self.is_dark_theme
+        self.apply_theme()
+
+    def on_system_theme_changed(self, settings, key):
+        self.update_theme_from_system()
+
+    def update_theme_from_system(self):
+        color_scheme = self.settings.get_string("color-scheme")
+        self.is_dark_theme = (color_scheme == 'prefer-dark')
+        self.apply_theme()
+
+    def apply_theme(self):
+        if self.is_dark_theme:
+            self.main_box.add_css_class('dark-theme')
+            self.theme_button.set_icon_name("weather-clear-night-symbolic") # Moon
+        else:
+            self.main_box.remove_css_class('dark-theme')
+            self.theme_button.set_icon_name("weather-clear-symbolic") # Sun
