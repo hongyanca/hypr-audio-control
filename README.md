@@ -2,6 +2,10 @@
 
 A simple audio control widget for Hyprland using GTK4 and gtk4-layer-shell.
 
+This project offers two implementations:
+1.  **C Version (Recommended)**: A lightweight, native implementation.
+2.  **Python Version (Legacy)**: The original Python implementation.
+
 ## Features
 
 - Volume control with visual slider
@@ -9,118 +13,97 @@ A simple audio control widget for Hyprland using GTK4 and gtk4-layer-shell.
 - Switch between audio devices with a single click
 - Real-time synchronization with system audio state via WirePlumber/PipeWire
 - Clean, modern interface that integrates seamlessly with Hyprland
+- **Keyboard Shortcuts**:
+    - **q** or **Ctrl+q**: Exit the application
+    - **1-9**: Set volume to 10%-90% (1=10%, 2=20%, ..., 9=90%)
+    - **0**: Set volume to 100%
+    - **-**: Decrease volume by 5%
+    - **=**: Increase volume by 5%
+    - **`** (Grave): Mute (0%)
 
-## Requirements
+## C Version (Recommended)
 
-- Python 3.13 or higher
-- GTK4
-- gtk4-layer-shell
-- WirePlumber/PipeWire (wpctl)
-- Hyprland or another Wayland compositor with layer-shell support
+### Requirements
 
-## Installation
+- GCC
+- Make
+- GTK4 (`libgtk-4-dev`)
+- gtk4-layer-shell (`libgtk4-layer-shell-dev`)
+- WirePlumber (`wireplumber`)
 
-1. Clone the repository:
-```bash
-git clone <repository-url>
-cd hypr-audio-control
-```
+### Build and Install
 
-2. Install dependencies using uv:
-```bash
-uv sync
-```
+1.  Clone the repository:
+    ```bash
+    git clone <repository-url>
+    cd hypr-audio-control
+    ```
 
-Alternatively, install system dependencies:
-```bash
-# Arch Linux
-sudo pacman -S python-gobject gtk4 gtk4-layer-shell wireplumber
+2.  Build the application:
+    ```bash
+    make
+    ```
 
-# Other distributions: install equivalent packages
-```
+3.  Run locally:
+    ```bash
+    ./hypr-audio-control
+    ```
 
-### Arch Linux Package
+### Arch Linux Package (C)
 
-To build and install as a system package on Arch Linux:
+To build and install the C version as a system package on Arch Linux:
 
 ```bash
 makepkg -si
 ```
 
-This will install the application to `/usr/share/hypr-audio-control` and provide the `hypr-audio-control` command.
+This uses the `PKGBUILD` in the root directory.
 
-Or build and install manually:
+## Python Version (Legacy)
 
-```bash
-makepkg -s
-sudo pacman -U ./hypr-audio-control-*.pkg.tar.zst
-```
+The Python source code is located in the `py-src` directory.
 
-## Usage
+### Requirements
 
-Run the application:
+- Python 3.13 or higher
+- GTK4
+- gtk4-layer-shell
+- WirePlumber/PipeWire (wpctl)
+
+### Run Locally
+
 ```bash
 uv run main.py
 ```
 
-Or if using system Python:
-```bash
-python main.py
-```
+*Note: You may need to use the `run.sh` script if you encounter layer shell linking errors.*
 
-The widget will appear in the top-right corner of your screen.
+### Arch Linux Package (Python)
 
-### Controls
+To build the Python version package:
 
-#### Mouse Controls
-- **Volume Slider**: Drag to adjust the volume of the active audio device
-- **Device List**: Click on any device name to set it as the default output device
-- **Sound Preferences**: Opens system sound preferences (placeholder)
-
-#### Keyboard Shortcuts
-- **q** or **Ctrl+q**: Exit the application
-- **1-9**: Set volume to 10%-90% (1=10%, 2=20%, ..., 9=90%)
-- **0**: Set volume to 100%
-- **-**: Decrease volume by 5%
-- **=**: Increase volume by 5%
+1.  Rename `PKGBUILD_PY` to `PKGBUILD` (backup the C `PKGBUILD` first).
+2.  Run `makepkg -si`.
 
 ## Project Structure
 
 ```
 hypr-audio-control/
-├── audiocontrol/
-│   ├── __init__.py
-│   ├── audio.py      # Audio device management and wpctl integration
-│   └── ui.py         # GTK4 user interface
-├── main.py           # Application entry point
-├── style.css         # UI styling
-└── pyproject.toml    # Project configuration
+├── src/              # C source code
+│   ├── main.c
+│   ├── audio.c
+│   └── audio.h
+├── py-src/           # Python source code
+│   ├── ui.py
+│   └── audio.py
+├── style/            # Shared CSS styles
+│   └── style.css
+├── Makefile          # Build script for C version
+├── PKGBUILD          # Arch Linux package script for C version
+├── PKGBUILD_PY       # Arch Linux package script for Python version
+└── main.py           # Entry point for Python version
 ```
-
-## Configuration
-
-The widget anchors to the top-right corner by default. To change the position, modify the `setup_layer_shell` method in `audiocontrol/ui.py`.
 
 ## License
 
 This project is licensed under the MIT License. See LICENSE file for details.
-
-## Contributing
-
-Contributions are welcome. Please open an issue or submit a pull request.
-
-## Troubleshooting
-
-### GTK4 Layer Shell Initialization Error
-
-If you encounter an error like:
-```
-Failed to initialize layer surface, GTK4 Layer Shell may have been linked after libwayland.
-```
-
-Please use the provided `run.sh` script to start the application:
-```bash
-./run.sh
-```
-
-This script preloads the `libgtk4-layer-shell.so` library to resolve the linking order issue.

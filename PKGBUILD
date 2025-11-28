@@ -1,7 +1,7 @@
 # Maintainer: User <user@localhost>
 pkgname=hypr-audio-control
 pkgver=0.2.0
-pkgrel=2
+pkgrel=3
 pkgdesc="Simple Audio Control Widget for Hyprland (C Version)"
 arch=('any')
 url="https://github.com/hongyanca/hypr-audio-control"
@@ -10,6 +10,7 @@ depends=('gtk4' 'gtk4-layer-shell' 'wireplumber')
 makedepends=('gcc' 'make' 'pkg-config')
 source=()
 md5sums=()
+options=('!debug')
 
 build() {
   cd "$startdir"
